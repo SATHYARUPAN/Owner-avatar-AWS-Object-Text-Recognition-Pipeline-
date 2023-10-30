@@ -54,4 +54,52 @@ mvn clean package<br>
 mvn clean install<br>
 5) Ensure you have the executable JAR files for each of the programs. To upload the JAR files to the respective EC2 instances, you can use tools like Cyberduck (for Mac).
 
+## SSH Access from a Mac:
+
+1) Open a terminal window and navigate to the directory where the .pem file is located.
+2) Use the 'chmod 400 labsuser.pem' command to change the permissions on the .pem key file to be read-only.
+3) Return to the AWS Management Console, go to the EC2 service, and choose Instances. In the Description tab of the selected instance, copy the IPv4 Public IP value.
+4) Return to the terminal window and use the following command: ssh -i <filename>.pem ec2-user@<public-ip>(replace with the actual public IP address you copied).
+5) Using cyberduck, Upload the ObjectRecognition.jar onto your EC2_A instance and TextRecognition.jar onto your EC2_B instance.
+6) Type yes when prompted to allow a first connection to this remote SSH server.
+
+Once we SSH to the two EC2 instances we will have something like this:
+![image](https://github.com/SATHYARUPAN/AWS-Object-Text-Recognition-Pipeline/assets/53247339/59380ae5-c266-4e2b-a4f2-72428a77b380)
+
+7) You'll now install necessary software, including Java, AWS CLI, and the AWS SDK for Java after connecting to EC2 instances, using the following commands in order.<br>
+-> 'sudo yum update'<br>
+-> 'sudo yum install java-1.8.0-openjdk'<br>
+-> 'sudo yum install python-pip'<br>
+-> 'pip install awscli'<br>
+-> 'aws configure' to configure the AWS credentials and access the resources.<br>
+
+## Run the programs on respective EC2 instance:
+
+1) Use 'java -jar yourjarfile.jar' to run the application.
+2) Parallely run both the applications on two different windows.
+
+## Running program on EC2-A instance(Object Recognition):
+
+1) Images satisfying the criteria of the object being classified as "Car" with a confidence level >90% are pushed to the SQS queue.
+2) We can see that 6 images have satisfied the condition and been pushed to the queue.
+![image](https://github.com/SATHYARUPAN/AWS-Object-Text-Recognition-Pipeline/assets/53247339/e70f5336-b516-45ad-89cd-2ff4db6989ae)
+3) The queue is also generated in AWS lab
+![image](https://github.com/SATHYARUPAN/AWS-Object-Text-Recognition-Pipeline/assets/53247339/5d87b212-c344-4914-b3bc-3e645d21bd75)
+![image](https://github.com/SATHYARUPAN/AWS-Object-Text-Recognition-Pipeline/assets/53247339/a0ed9530-a440-4880-ab2a-5302b5029c20)
+
+## Running program on EC2-B instance(Text Recognition):
+
+1) Images are sent to the SQS queue from EC2 instance EC2_A. Afterward, these images are retrieved from the same SQS queue and processed for text recognition. 
+2) The resulting text from the images is then stored in a file named "output.txt" within the same directory. This file contains the final output, which can be accessed to review the processed text content.
+![image](https://github.com/SATHYARUPAN/AWS-Object-Text-Recognition-Pipeline/assets/53247339/6126e933-72e2-4c72-8214-eee469e9ad6b)
+![image](https://github.com/SATHYARUPAN/AWS-Object-Text-Recognition-Pipeline/assets/53247339/5bc6f3f4-26b9-4581-b1de-60c975af05d6)
+
+## Conclusion
+
+You've now learnt to:
+1) Create VMs (EC2 instances) in the cloud.
+2) Use cloud storage (S3) in your applications.
+3) Communicate between VMs using a queue service (SQS).
+
+
 
